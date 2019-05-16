@@ -29,25 +29,21 @@ class MainActivity : Activity() {
             // Executa o asynctask e pega o resultado dessa execução
             var xmls = load.execute().get()
 
-            // Cria um array com o resultado do asynctask
-            val lista = Array(1) {
-                i -> xmls
-            }
-            // Cria um arrayAdapter com a lista criada e popula o list view da main activity
-            conteudoRSS.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, lista)
+            // Cria um arrayAdapter com a lista resultante do download e popula o list view da main activity
+            conteudoRSS.adapter = ArrayAdapter<ItemRSS>(this, android.R.layout.simple_list_item_1, xmls)
         } catch (e: IOException) {
             e.printStackTrace()
         }
     }
 
-    internal inner class LoadXML: AsyncTask<Int, Int, String>() {
+    internal inner class LoadXML: AsyncTask<Int, Int, List<ItemRSS>>() {
 
-        override fun doInBackground(vararg params: Int?): String? {
+        override fun doInBackground(vararg params: Int?): List<ItemRSS>? {
             return getRssFeed(RSS_FEED)
         }
 
         @Throws(IOException::class)
-        fun getRssFeed(feed: String): String {
+        fun getRssFeed(feed: String): List<ItemRSS>? {
             var input: InputStream? = null
             var rssFeed: String
 
@@ -70,7 +66,8 @@ class MainActivity : Activity() {
                 }
             }
 
-            return rssFeed
+            // Pega a string resultante do download do arquivo e faz o parse através da função solicitada
+            return ParserRSS.parse(rssFeed)
         }
     }
 }
