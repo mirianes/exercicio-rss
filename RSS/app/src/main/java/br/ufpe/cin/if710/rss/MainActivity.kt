@@ -1,25 +1,16 @@
 package br.ufpe.cin.if710.rss
 
-import android.app.Activity
+import android.app.ListActivity
 import android.os.AsyncTask
-import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
-class MainActivity : Activity() {
+class MainActivity : ListActivity() {
 
-    private val RSS_FEED = "http://leopoldomt.com/if1001/g1brasil.xml"
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
+    private val RSS_FEED = "http://pox.globo.com/rss/g1/ciencia-e-saude/"
 
     override fun onStart() {
         super.onStart()
@@ -33,19 +24,8 @@ class MainActivity : Activity() {
                 i -> xmls[i]
             }
 
-            // Configurando o RecyclerView
-            conteudoRSS.apply {
-                // Utiliza-se o layout manager para dizer ao recycler view como organizar os elementos na tela
-                // Aqui foi utilizado o layout linear, para exibir os elementos verticalmente
-                layoutManager = LinearLayoutManager(applicationContext)
-
-                // É necessário especificar qual o adapter que será utilizado
-                // Aqui foi criado um adapter personalizado que exibe o titulo e o link do itemRSS
-                adapter = ItemRSSAdapter(itemRSSArray, applicationContext)
-
-                // Adiciona uma linha dividindo cada célula do recyclerview
-                addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
-            }
+            // Configurando o listAdapter da ListActivity
+            listAdapter = ItemRSSAdapter(itemRSSArray, applicationContext)
         } catch (e: IOException) {
             e.printStackTrace()
         }
