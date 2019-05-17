@@ -3,10 +3,9 @@ package br.ufpe.cin.if710.rss
 import android.app.Activity
 import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Xml
-import android.widget.ArrayAdapter
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.textView
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -29,8 +28,24 @@ class MainActivity : Activity() {
             // Executa o asynctask e pega o resultado dessa execução
             var xmls = load.execute().get()
 
-            // Cria um arrayAdapter com a lista resultante do download e popula o list view da main activity
-            conteudoRSS.adapter = ArrayAdapter<ItemRSS>(this, android.R.layout.simple_list_item_1, xmls)
+            // Cria um array com a lista resultante do download
+            val itemRSSArray = Array(xmls.size) {
+                i -> xmls[i]
+            }
+
+            // Configurando o RecyclerView
+            conteudoRSS.apply {
+                // Utiliza-se o layout manager para dizer ao recycler view como organizar os elementos na tela
+                // Aqui foi utilizado o layout linear, para exibir os elementos verticalmente
+                layoutManager = LinearLayoutManager(applicationContext)
+
+                // É necessário especificar qual o adapter que será utilizado
+                // Aqui foi criado um adapter personalizado que exibe o titulo e o link do itemRSS
+                adapter = ItemRSSAdapter(itemRSSArray, applicationContext)
+
+                // Adiciona uma linha dividindo cada célula do recyclerview
+                addItemDecoration(DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL))
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
