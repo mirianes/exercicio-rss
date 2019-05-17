@@ -2,6 +2,9 @@ package br.ufpe.cin.if710.rss
 
 import android.app.ListActivity
 import android.os.AsyncTask
+import android.widget.AdapterView
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
@@ -10,7 +13,7 @@ import java.net.URL
 
 class MainActivity : ListActivity() {
 
-    private val RSS_FEED = "http://pox.globo.com/rss/g1/ciencia-e-saude/"
+    private val RSS_FEED = "http://leopoldomt.com/if1001/g1brasil.xml"
 
     override fun onStart() {
         super.onStart()
@@ -26,6 +29,7 @@ class MainActivity : ListActivity() {
 
             // Configurando o listAdapter da ListActivity
             listAdapter = ItemRSSAdapter(itemRSSArray, applicationContext)
+
         } catch (e: IOException) {
             e.printStackTrace()
         }
